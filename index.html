@@ -51,14 +51,14 @@
   <body style="margin: 0; overflow:hidden;">
     <div id="distance"></div>
     <div id="message">
-      大鎧ドラゴンがあらわれた！
+      용이 나타난다.
     </div>
     <a-scene
       vr-mode-ui="enabled: false"
       embedded
       arjs="sourceType: webcam; debugUIEnabled: false;"
     >
-      <!--3D모델(gltf파일)->
+      <!--3D모델(gltf파일)-->
       <a-assets>
         <a-asset-items id="dragon" src="dragon.gltf" ></a-asset-items>
       </a-assets>
@@ -92,11 +92,23 @@
         constdirectionLight=document.getElementById('directionLight');
         constambientLight=document.getElementById('ambientLight');el.addEventListener('gps-entity-place-update-positon', (event) => {distanceMsg.textContent= `그리고${event.detail.distance}m`;
           if(event.detail.distance<= 30) {
-            //30m이하에서 쾌활하고 메시지 표시, 거리 보인다directionLight.setAttribute('intensity',1);ambientLight.setAttribute('intensity',1);distanceMsg.style.display= 'none';message.style.display= 'block';
+            //30m이하에서 쾌활하고 메시지 표시, 거리 보인다
+            directionLight.setAttribute('intensity',1);
+            ambientLight.setAttribute('intensity',1);
+            distanceMsg.style.display= 'none';
+            message.style.display= 'block';
           } else if(event.detail.distance<= 50) {
-            //50m이하로 가까워질수록 밝고 메시지 숨기고 거리 표시directionLight.setAttribute('intensity',1 -event.detail.distance/ 50);ambientLight.setAttribute('intensity',1 -event.detail.distance/ 50);distanceMsg.style.display= 'block';message.style.display= 'none';
+            //50m이하로 가까워질수록 밝고 메시지 숨기고 거리 표시
+            directionLight.setAttribute('intensity',1 -event.detail.distance/ 50);
+            ambientLight.setAttribute('intensity',1 -event.detail.distance/ 50);
+            distanceMsg.style.display= 'block';
+            message.style.display= 'none';
           } else {
-            //50m보다 떨어지면 밝기 0메시지 숨기고 거리 표시directionLight.setAttribute('intensity',0);ambientLight.setAttribute('intensity',0);distanceMsg.style.display= 'block';message.style.display= 'none';
+            //50m보다 떨어지면 밝기 0메시지 숨기고 거리 표시
+            directionLight.setAttribute('intensity',0);
+            ambientLight.setAttribute('intensity',0);
+            distanceMsg.style.display= 'block';
+            message.style.display= 'none';
           }
         });
       });
