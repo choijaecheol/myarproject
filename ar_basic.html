@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -6,21 +7,111 @@
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+    <!--animation-mixture를 사용하기 때문-->
+    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.2.0/dist/aframe-extras.min.js"></script>
+    <style>
+      body {
+        font-family:sans-serif;
+      }
+      * {
+        box-sizing:border-box;
+      }
+      #distance {
+        position:fixed;
+        z-index: 10000;
+        background-color: rgba(0,0,0,.8);
+        color:#fff;
+        text-align:center;
+        padding:10px;
+        top:10px;
+        left:5%;
+        width:90%;
+        display:block;
+      }
+      body {
+        margin: 0;
+      }
+      #message {
+        position:fixed;
+        z-index: 10;
+        left:5%;
+        bottom:30px;
+        width:90%;
+        padding:5%;
+        color:#fff;
+        font-weight:bold;
+        background-color: rgba(0,0,0,.8);
+        border-radius:20px;
+        border:3px solid #fff;
+        display:none;
+      }
+    </style>
   </head>
 
   <body style="margin: 0; overflow:hidden;">
+    <div id="distance"></div>
+    <div id="message">
+      용이 나타난다.
+    </div>
     <a-scene
       vr-mode-ui="enabled: false"
       embedded
       arjs="sourceType: webcam; debugUIEnabled: false;"
     >
-      <a-text
-        value="This content will always face you."
-        look-at="[gps-camera]"
-        scale="50 50 50"
-        gps-entity-place="latitude: 37.601046278296515; longitude: 127.02290304577107;"
-      ></a-text>
-      <a-camera gps-camera rotation-reader> </a-camera>
+      <!--3D모델(gltf파일)-->
+      <a-assets>
+        <a-asset-items id="dragon" src="scene.gltf" ></a-asset-items>
+      </a-assets>
+      <a-entity
+        gps-entity-place="latitude: 37.60094788405181; longitude: 127.02291193103679;"
+        gltf-model="#dragon"
+        scale="7 7 7"
+        rotation="0 0 0"
+        pisition="0 -1 0"
+        animation-mixer
+      ></a-entity>
+      <a-light
+        id="directionLight"
+        type="directional"
+        color="#FFF"
+        intensity="0"
+        position="-1 1 2">
+      </a-light>
+      <a-light
+        id="ambientLight"
+        type="ambient"
+        intensity="0"
+        color="#FFF">
+      </a-light>
+      <a-camera gps-camera="minDistance:10; maxDistance:50" rotation-reader> </a-camera>
     </a-scene>
+    <script>window.addEventListener('load', function () {
+        constel=document.querySelector('[gps-entity-place]');
+        constdistanceMsg=document.getElementById('distance');
+        constmessage=document.getElementById('message');
+        constdirectionLight=document.getElementById('directionLight');
+        constambientLight=document.getElementById('ambientLight');el.addEventListener('gps-entity-place-update-positon', (event) => {distanceMsg.textContent= `그리고${event.detail.distance}m`;
+          if(event.detail.distance<= 30) {
+            //30m이하에서 쾌활하고 메시지 표시, 거리 보인다
+            directionLight.setAttribute('intensity',1);
+            ambientLight.setAttribute('intensity',1);
+            distanceMsg.style.display= 'none';
+            message.style.display= 'block';
+          } else if(event.detail.distance<= 50) {
+            //50m이하로 가까워질수록 밝고 메시지 숨기고 거리 표시
+            directionLight.setAttribute('intensity',1 -event.detail.distance/ 50);
+            ambientLight.setAttribute('intensity',1 -event.detail.distance/ 50);
+            distanceMsg.style.display= 'block';
+            message.style.display= 'none';
+          } else {
+            //50m보다 떨어지면 밝기 0메시지 숨기고 거리 표시
+            directionLight.setAttribute('intensity',0);
+            ambientLight.setAttribute('intensity',0);
+            distanceMsg.style.display= 'block';
+            message.style.display= 'none';
+          }
+        });
+      });
+    </script>
   </body>
 </html>
