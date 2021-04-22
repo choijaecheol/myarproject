@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
+    <title>marker AR</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <!-- we import arjs version without NFT but with marker + location based support -->
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  </head>
+
+    <body style="margin:0px; overflow:hidden;">
+        <a-scene embedded arjs="debugUIEnabled:false; sourceType: webcam;" vr-mode-ui="enabled: false" >
+        <a-assets>
+            <!--a-assets내에서 표시시키고 싶은 obj모델을 등록 -->
+            <a-asset-item id="mone-obj" src="data/mone-head2.obj"></a-asset-item>
+            <a-asset-item id="mone-mtl" src="data/mone-head2.mtl"></a-asset-item>
+        </a-assets>
+
+        <a-marker preset="hiro">
+            <!--a-marker가 인식된 때에 표시하는 것을 자식 요소로 한다 -->
+            <a-entity id="mone" obj-model="obj:#mone-obj; mtl:#mone-mtl" position="0 0 -5" scale="10 10 10" rotation="0 -90 60">
+            </a-entity>
+        </a-marker>
+        <a-entity camera></a-entity>
+        </a-scene>
+    </body>
+</html>
